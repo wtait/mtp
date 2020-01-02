@@ -26,5 +26,10 @@ contract('TutorialToken', accounts => {
             decimals = decimals.toNumber();
             decimals.should.be.equal(18);
         });
+        it('has correct intitialSupply', async function() {
+            let totalSupply = await this.token.totalSupply()
+            totalSupply = totalSupply.toNumber();
+            totalSupply.should.be.equal(initialSupply);
+        });
     })
 })
