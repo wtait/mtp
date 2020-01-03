@@ -8,7 +8,6 @@ require('chai')
 
 
 describe('TutorialToken', () => {
-    const [ owner ] = accounts;
     const initialSupply = 12000;
 
     beforeEach(async function () {
