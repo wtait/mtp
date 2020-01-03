@@ -7,7 +7,7 @@
     "test": "test"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "npx mocha --exit --recursive test"
   },
   "author": "",
   "license": "ISC",
@@ -16,5 +16,9 @@
     "chai": "^4.1.2",
     "chai-as-promised": "^7.0.0",
     "openzeppelin-solidity": "^2.4.0"
+  },
+  "devDependencies": {
+    "@openzeppelin/test-environment": "^0.1.1",
+    "mocha": "^6.2.2"
   }
 }

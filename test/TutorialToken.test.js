@@ -1,18 +1,21 @@
-const TutorialToken = artifacts.require('TutorialToken');
+const { accounts, contract, web3 } = require('@openzeppelin/test-environment');
+const TutorialToken = contract.fromArtifact('TutorialToken');
+
 
 require('chai')
     .use(require('chai-as-promised'))
     .should();
 
 
-contract('TutorialToken', accounts => {
+describe('TutorialToken', () => {
+    const [ owner ] = accounts;
     const initialSupply = 12000;
 
-    beforeEach( async function () {
+    beforeEach(async function () {
         this.token = await TutorialToken.new(initialSupply);
-    })
+    });
 
-    describe('token attributes', function() {
+    // describe('token attributes', function() {
         it('has correct name', async function() {
             const name = await this.token.name();
             name.should.equal("TutorialToken");
@@ -31,5 +34,5 @@ contract('TutorialToken', accounts => {
             totalSupply = totalSupply.toNumber();
             totalSupply.should.be.equal(initialSupply);
         });
-    })
-})
+    // })
+});
