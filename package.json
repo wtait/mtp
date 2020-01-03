@@ -12,13 +12,13 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "big-integer": "^1.6.48",
-    "chai": "^4.1.2",
-    "chai-as-promised": "^7.0.0",
     "openzeppelin-solidity": "^2.4.0"
   },
   "devDependencies": {
     "@openzeppelin/test-environment": "^0.1.1",
+    "@openzeppelin/test-helpers": "^0.5.4",
+    "chai": "^4.2.0",
+    "chai-as-promised": "^7.1.1",
     "mocha": "^6.2.2"
   }
 }
