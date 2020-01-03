@@ -15,7 +15,7 @@ describe('TutorialToken', () => {
         this.token = await TutorialToken.new(initialSupply);
     });
 
-    // describe('token attributes', function() {
+    describe('token attributes', function() {
         it('has correct name', async function() {
             const name = await this.token.name();
             name.should.equal("TutorialToken");
@@ -34,5 +34,5 @@ describe('TutorialToken', () => {
             totalSupply = totalSupply.toNumber();
             totalSupply.should.be.equal(initialSupply);
         });
-    // })
+    });
 });
