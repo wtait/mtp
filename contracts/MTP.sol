@@ -12,20 +12,33 @@ contract MTP {
   * @param amount_ number of tokens to transfer to_ account
   * @param failed_ if transfer was successful or not */
 
- struct Transfer {
-  address contract_;
-  address to_;
-  uint amount_;
-  bool failed_;
+//  struct Transfer {
+//   address contract_;
+//   address to_;
+//   uint amount_;
+//   bool failed_;
+//  }
+
+ struct Token {
+   address contract_;
+   Staker[] public stakers;
  }
+
+ struct Staker {
+   address staker_;
+  //  uint stakerIndex_;
+   int balance_;
+ }
+
+
 
 
    /**
  * @dev a list of all transfers successful or unsuccessful */
 
-Transfer[] public transactions;
 
-mapping(bytes32 => address) public tokens;
+//mapping(bytes32 => address) public tokens;
+mapping(address => Token) public tokens;
 
 ERC20 public ERC20Interface;
 
@@ -38,22 +51,27 @@ ERC20 public ERC20Interface;
  * @param to_ beneficiary address
  * @param amount_ numbers of token to transfer */
 
-  function transferTokens(bytes32 symbol_, address to_, uint256 amount_) public {
+  function transferTokens(bytes32 token_, address to_, uint256 amount_) public {
   //require(tokens[symbol_] != 0x0);
   //require(amount_ > 0);
 
-  address contract_ = tokens[symbol_];
-  //address from_ = msg.sender;
+  Token_ = tokens[token_];
+  address from_ = msg.sender;
 
   ERC20Interface = ERC20(contract_);
 
-  transactions.push(
-  Transfer({
-  contract_: contract_,
-            to_: to_,
-            amount_: amount_,
-            failed_: true
-  })
- );
+//   transactions.push(
+//   Transfer({
+//   contract_: contract_,
+//             to_: to_,
+//             amount_: amount_,
+//             failed_: true
+//   })
+//  );
  }
+
+  function addToken(address contractAddress) public {
+    Token storage t = tokens[contractAddress];
+    t.stakers.push(contractAddress)
+  }
 }

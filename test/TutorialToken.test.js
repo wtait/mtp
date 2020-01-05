@@ -5,7 +5,7 @@ const {
     expectEvent,  // Assertions for emitted events
     expectRevert, // Assertions for transactions that should fail
   } = require('@openzeppelin/test-helpers');
-const TutorialToken = contract.fromArtifact('TutorialToken');
+
 
 
 require('chai')
@@ -14,12 +14,13 @@ require('chai')
 
 
 describe('TutorialToken', () => {
+    const TutorialToken = contract.fromArtifact('TutorialToken');
     const initialSupply = 12000;
-    //const[sender, receiver] = accounts;
+    const[sender, receiver] = accounts;
 
     beforeEach(async function () {
-        this.token = await TutorialToken.new(initialSupply);
-        // this.value = new BN(1);
+        this.token = await TutorialToken.new(initialSupply, {from: sender});
+        this.value = new BN(1);
     });
 
     describe('token attributes', function() {
@@ -41,14 +42,35 @@ describe('TutorialToken', () => {
             totalSupply = totalSupply.toNumber();
             totalSupply.should.be.equal(initialSupply);
         });
+        it('distributes correct amount to accounts', async function() {
+            let founderBalance = await this.token.balanceOf(sender);
+            founderBalance = founderBalance.toNumber()
+            founderBalance.should.equal(initialSupply);
+        })
     });
 
-    // describe('token transfers', function() {
-    //     it('reverts when transferring tokens to the zero address', async function () {
-    //         await expectRevert(
-    //             this.token.transfer(constants.ZERO_ADDRESS, this.value, {from: sender }),
-    //             'ERC20: transfer to the zero address',
-    //         );
-    //     });
-    // });
+    describe('token transfers', function() {
+        it('reverts when transferring tokens to the zero address', async function () {
+            await expectRevert(
+                this.token.transfer(constants.ZERO_ADDRESS, this.value, {from: sender }),
+                'ERC20: transfer to the zero address',
+            );
+        });
+        it('emits a Transfer event on successful transfers', async function () {
+            const receipt = await this.token.transfer(
+              receiver, this.value, { from: sender }
+            );
+            // Event assertions can verify that the arguments are the expected ones
+            expectEvent(receipt, 'Transfer', {
+              from: sender,
+              to: receiver,
+              value: this.value,
+            });
+          });
+          it('updates balances on successful transfers', async function () {
+            await this.token.transfer(receiver, this.value, { from: sender });
+            let receiverBalance = await this.token.balanceOf(receiver);
+            receiverBalance.should.be.bignumber.equal(this.value);
+          });
+    });
 });

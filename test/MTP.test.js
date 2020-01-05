@@ -26,8 +26,43 @@ describe('MTP', () => {
         })
     })
 
-
 })
+
+
+// describe('TutorialToken', () => {
+//     const TutorialToken = contract.fromArtifact('TutorialToken');
+//     const initialSupply = 12000;
+
+//     beforeEach(async function() {
+//         this.token = await TutorialToken.new(initialSupply);
+//     })
+
+//     describe('token attributes', function() {
+//         it('tests begin', async function() {
+//             const test = true
+//             test.should.equal(true);
+//         });
+//         it('has correct name', async function() {
+//             const name = await this.token.name();
+//             name.should.equal("TutorialToken");
+//         });
+//         it('has correct symbol', async function() {
+//             const symbol = await this.token.symbol();
+//             symbol.should.equal("TT");
+//         });
+//         it('has correct decimals', async function() {
+//             let decimals = await this.token.decimals()
+//             decimals = decimals.toNumber();
+//             decimals.should.be.equal(18);
+//         });
+//         it('has correct intitialSupply', async function() {
+//             let totalSupply = await this.token.totalSupply()
+//             totalSupply = totalSupply.toNumber();
+//             totalSupply.should.be.equal(initialSupply);
+//         });
+//     })
+
+// })
 
 
 
