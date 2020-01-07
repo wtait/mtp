@@ -21,8 +21,9 @@ contract MTP {
 
  struct Token {
    address contract_;
-   Staker[] public stakers;
+   Staker[] stakers;
  }
+
 
  struct Staker {
    address staker_;
@@ -40,9 +41,13 @@ contract MTP {
 //mapping(bytes32 => address) public tokens;
 mapping(address => Token) public tokens;
 
+
+
 ERC20 public ERC20Interface;
 
-
+  // constructor() public {  //need to inherit Ownable if used
+  //   owner = msg.sender;
+  // }
 
 /**
  * @dev method that handles transfer of ERC20 tokens to other address
@@ -51,27 +56,28 @@ ERC20 public ERC20Interface;
  * @param to_ beneficiary address
  * @param amount_ numbers of token to transfer */
 
-  function transferTokens(bytes32 token_, address to_, uint256 amount_) public {
+  function mtpTransfer(address token_, address to_, uint256 amount_) public {
   //require(tokens[symbol_] != 0x0);
   //require(amount_ > 0);
 
-  Token_ = tokens[token_];
+  //contract_ = tokens[token_];
   address from_ = msg.sender;
 
-  ERC20Interface = ERC20(contract_);
+  
+  tokens[address] ? : tokens[address] = Token(address)
 
-//   transactions.push(
-//   Transfer({
-//   contract_: contract_,
-//             to_: to_,
-//             amount_: amount_,
-//             failed_: true
-//   })
-//  );
+  ERC20Interface = ERC20(token_);
+
+
+  ERC20Interface.transferFrom(from_, to_, amount_);
  }
 
   function addToken(address contractAddress) public {
     Token storage t = tokens[contractAddress];
-    t.stakers.push(contractAddress)
+    // t.stakers.push(Staker({
+    //   staker_: contractAddress,
+    //   balance_: 0
+    // }));
   }
+
 }
