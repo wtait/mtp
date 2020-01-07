@@ -21,7 +21,8 @@ contract MTP {
 
  struct Token {
    address contract_;
-   Staker[] stakers;
+   //Staker[] stakers;
+   mapping (uint => Staker) stakers;
  }
 
 
@@ -52,7 +53,7 @@ ERC20 public ERC20Interface;
 /**
  * @dev method that handles transfer of ERC20 tokens to other address
  * it assumes the calling address has approved this contract * as spender
- * @param symbol_ identifier mapping to a token contract address
+ * @param token_ token contract address
  * @param to_ beneficiary address
  * @param amount_ numbers of token to transfer */
 
@@ -63,17 +64,24 @@ ERC20 public ERC20Interface;
   //contract_ = tokens[token_];
   address from_ = msg.sender;
 
-  
-  tokens[address] ? : tokens[address] = Token(address)
+
+  if(! (tokens[token_].contract_ == token_)) {
+    //tokens[token_] = Token(token_);
+    addToken(token_);
+  }
 
   ERC20Interface = ERC20(token_);
 
 
   ERC20Interface.transferFrom(from_, to_, amount_);
+
+  //update bibo balances
+  //emit mtpTransfer
  }
 
   function addToken(address contractAddress) public {
-    Token storage t = tokens[contractAddress];
+    //Token storage t = tokens[contractAddress];
+    tokens[contractAddress] = Token(contractAddress);
     // t.stakers.push(Staker({
     //   staker_: contractAddress,
     //   balance_: 0
