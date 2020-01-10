@@ -24,7 +24,7 @@ describe('MTP', () => {
 
     beforeEach(async function() {
         this.mtp = await MTP.new();
-        this.token = await TutorialToken.new(initialSupply);
+        this.token = await TutorialToken.new(initialSupply, {from: alice});
     });
 
     describe('MTP Contract', function() {
@@ -32,16 +32,28 @@ describe('MTP', () => {
         //     const test = typeof(this.mtp);
         //     test.should.equal('object');
         // });
+        it('distributes correct amount to accounts', async function() {
+            //this.token = await TutorialToken.new(initialSupply);
+            //let tokenAddress = this.token.address;
+            //let amount = new BN(1);
+            let founderBalance = await this.token.balanceOf(alice);
+            founderBalance = founderBalance.toNumber()
+            founderBalance.should.equal(initialSupply);
+        })
         it('should be able to  transfer sender token to another wallet', async () => {
+            const[alice, bob] = accounts;
             this.mtp = await MTP.new();
-            this.token = await TutorialToken.new(initialSupply);
-            let tokenAddress = this.token.address;
-            let amount = 1;
-            console.log(tokenAddress);
+            this.token = await TutorialToken.new(initialSupply, {from: alice});
+            let tokenAddress = await this.token.address;
+            let mtpAddress = await this.mtp.address;
+            console.log(mtpAddress, alice);
+            this.value = new BN(1);
+            //console.log(amount)
+            await this.token.approve(mtpAddress, this.value,{from: alice});
             //await this.token.approve(mtpAddress, amount, {from: alice});
-            await this.mtp.mtpTransfer(tokenAddress, bob, amount, {from: alice})
-            let balance = ((await  token.balanceOf(bob)).toString());
-            balance.should.equal(amount.toString())
+            await this.mtp.mtpTransfer(tokenAddress, bob, this.value, {from: alice})
+            let balance = ((await  this.token.balanceOf(bob)).toString());
+            balance.should.equal(this.value.toString())
         })
     })
 

@@ -22,7 +22,7 @@ contract MTP {
  struct Token {
    address contract_;
    //Staker[] stakers;
-   mapping (uint => Staker) stakers;
+   //mapping (uint => Staker) stakers;
  }
 
 
