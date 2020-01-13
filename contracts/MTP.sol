@@ -20,16 +20,18 @@ contract MTP {
 //  }
 
  struct Token {
-   address contract_;
+   address addr;
    //Staker[] stakers;
+   uint numberStakers;
    //mapping (uint => Staker) stakers;
  }
 
 
+
  struct Staker {
-   address staker_;
+   address stakerAddress;
   //  uint stakerIndex_;
-   int balance_;
+   int stakerBalance;
  }
 
 
@@ -37,7 +39,6 @@ contract MTP {
 
    /**
  * @dev a list of all transfers successful or unsuccessful */
-
 
 //mapping(bytes32 => address) public tokens;
 mapping(address => Token) public tokens;
@@ -55,20 +56,20 @@ ERC20 public ERC20Interface;
  * it assumes the calling address has approved this contract * as spender
  * @param token_ token contract address
  * @param to_ beneficiary address
+
  * @param amount_ numbers of token to transfer */
 
   function mtpTransfer(address token_, address to_, uint256 amount_) public {
-  //require(tokens[symbol_] != 0x0);
-  //require(amount_ > 0);
 
-  //contract_ = tokens[token_];
   address from_ = msg.sender;
 
-
-  if(! (tokens[token_].contract_ == token_)) {
-    //tokens[token_] = Token(token_);
+  if(! (tokens[token_].addr == token_)) {
     addToken(token_);
   }
+
+  Token storage t = tokens[token_];
+  t.addr = token_;
+  t.numberStakers++;
 
   ERC20Interface = ERC20(token_);
 
@@ -79,13 +80,31 @@ ERC20 public ERC20Interface;
   //emit mtpTransfer
  }
 
-  function addToken(address contractAddress) public {
-    //Token storage t = tokens[contractAddress];
-    tokens[contractAddress] = Token(contractAddress);
+  //events
+  //tokenAdded
+  event TokenAdded(
+    address indexed _tokenContract,
+    uint indexed _numberOfTokens
+    //string indexed _tokenName
+    //fungible or nft
+    //symbol
+    //totalsupply
+  );
+
+  function addToken(address contractAddress) public returns (uint numTokens){
+    numTokens++;
+    tokens[contractAddress] = Token({addr: contractAddress, numberStakers: 0});
     // t.stakers.push(Staker({
     //   staker_: contractAddress,
     //   balance_: 0
     // }));
+    emit TokenAdded(contractAddress, numTokens);
   }
 
 }
+
+
+//events
+  //stakerAdded
+  //newMTPTransfer
+  //newMTPNetworkDeployed

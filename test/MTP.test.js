@@ -42,6 +42,34 @@ describe('MTP', () => {
             let balance = ((await  this.token.balanceOf(bob)).toString());
             balance.should.equal(this.value.toString())
         });
+        it('should emit a tokenAdded event when a new token is deposited', async function() {
+            this.value = new BN(1);
+            await this.token.approve(this.mtpAddress, this.value,{from: alice});
+            const receipt = await this.mtp.mtpTransfer(
+                this.tokenAddress, bob, this.value, {from: alice}
+            );
+
+            expectEvent(receipt, 'TokenAdded', {
+                _tokenContract: this.tokenAddress,
+                _numberOfTokens: '1'
+            });
+
+            });
+        it('should have a mapping called tokens', async function() {
+            const tokenMapping = await this.mtp.tokens;
+            tokenMapping.should.to.exist;
+        });
+        it('should add a Token struct to tokens mapping when a new token is staked', async function() {
+            this.value = new BN(1);
+            //const numberToken = await this.mtp.numTokens;
+            //console.log(numberToken);
+            await this.token.approve(this.mtpAddress, this.value,{from: alice});
+            await this.mtp.mtpTransfer(this.tokenAddress, bob, this.value, {from: alice});
+            const newTokenStruct = await this.mtp.tokens.call(this.tokenAddress);
+            const stakerCount = await newTokenStruct.numberStakers.toNumber();
+            newTokenStruct.should.own.include({addr: this.tokenAddress});
+            stakerCount.should.equal(1);
+        });
     });
 
 })

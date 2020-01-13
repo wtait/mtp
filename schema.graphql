@@ -1,3 +1,5 @@
+
+    # initializing event: mtpTransfer()
 type Transfer @entity {
   id: ID!
   # mapping to Token entity
@@ -21,6 +23,7 @@ type Transfer @entity {
 }
 
 # the issuing contract of the transferred token
+    # initializing event: addToken()
 type TokenFactory @entity {
   id: ID!
   tokenName: String
@@ -30,6 +33,7 @@ type TokenFactory @entity {
 }
 
 # the token being transferred
+    # initializing event: addToken()
 type Token @entity {
     id: ID!
     #network address of contract that minted this token
@@ -41,6 +45,7 @@ type Token @entity {
 }
 
 # any entity included in stakeChains for staking. sub-entities include users (external accounts) and corporations/conglomorates/ (issuing contract or organization)
+    # initializing event: mtpTransfer()
 type Staker @entity {
   id: ID!
   # accountType: String!  #should be either internal or external. use struc to sort
@@ -53,6 +58,7 @@ type Staker @entity {
 }
 
 # an entity that defines the current set of token stakers and their stakes
+    # initializing event: mtpTransfer()
 type StakeChain @entity {
   id: ID!
   transfer: Transfer!
@@ -62,6 +68,7 @@ type StakeChain @entity {
 }
 
 # a scalar value derived from the position of the staker in the current stake chain
+    # initializing event: mtpTransfer()
 type Stake @entity {
   id: ID!
   tokenFactory: TokenFactory!
@@ -71,8 +78,6 @@ type Stake @entity {
   stakeChain: StakeChain!
   value: Int!
 }
-
-
 
 
 # type MTPNetwork @entity {
