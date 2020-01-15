@@ -50,8 +50,7 @@ describe('MTP', () => {
             );
 
             expectEvent(receipt, 'TokenAdded', {
-                _tokenContract: this.tokenAddress,
-                _numberOfTokens: '1'
+                _tokenContract: this.tokenAddress
             });
 
             });
@@ -66,8 +65,8 @@ describe('MTP', () => {
             await this.token.approve(this.mtpAddress, this.value,{from: alice});
             await this.mtp.mtpTransfer(this.tokenAddress, bob, this.value, {from: alice});
             const newTokenStruct = await this.mtp.tokens.call(this.tokenAddress);
-            const stakerCount = await newTokenStruct.numberStakers.toNumber();
-            newTokenStruct.should.own.include({addr: this.tokenAddress});
+            const stakerCount = await newTokenStruct.number_Token_Stakers_.toNumber();
+            newTokenStruct.should.own.include({token_Address_: this.tokenAddress});
             stakerCount.should.equal(1);
         });
     });
