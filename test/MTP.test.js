@@ -73,14 +73,12 @@ describe('MTP', () => {
             await this.mtp.mtpTransfer(this.tokenAddress, bob, this.value, {from: alice});
             const newStakerFromStruct = await this.mtp.stakers.call(alice);
             const stakerFromBalance = await newStakerFromStruct.staker_Stake_Balance_.toNumber();
-            console.log(newStakerFromStruct);
             const newStakerToStruct = await this.mtp.stakers.call(bob);
             const stakerToBalance = await newStakerToStruct.staker_Stake_Balance_.toNumber();
-            console.log(newStakerToStruct);
             newStakerFromStruct.should.own.include({staker_Address_: alice});
-            stakerFromBalance.should.equal(0);
+            stakerFromBalance.should.equal(1);
             newStakerToStruct.should.own.include({staker_Address_: bob});
-            stakerToBalance.should.equal(0);        
+            stakerToBalance.should.equal(-1);        
         })
     });
 
