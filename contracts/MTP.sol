@@ -54,23 +54,26 @@ contract MTP {
     function mtpTransfer(address token_, address to_, uint256 amount_) public {
         address from_ = msg.sender;
 
-        if(! (tokens[token_].token_Address_ == token_)) {
-            addToken(token_);
+        if(stakers[to_].staker_Address_ != to_) {
+            addStaker(to_);
         }
+
+
+        //Staker storage s = stakers[to_];
+        //s.staker_Address_ = to_;
+
+        if(tokens[token_].token_Address_ != token_) {
+            addToken(token_, to_);
+        }
+
+
         Token storage t = tokens[token_];
         t.token_Address_ = token_;
         t.total_Staked_Tokens_ += amount_;
         t.number_Token_Stakers_ ++;
         t.token_Stake_Balance_ += t.number_Token_Stakers_;  //stakes should be abstracted to external contract or global variable?
         //t.token_Stakers_.push(to_);
-
-        if(! (stakers[to_].staker_Address_ == to_)) {
-            addStaker(to_);
-        }
-
-        Staker storage s = stakers[to_];
-        s.staker_Address_ = to_;
-        t.token_Stakers_.push(s);
+        //t.token_Stakers_.push(s);
 
         //update bibo balances
             for(uint i = 0; i < t.token_Stakers_.length; i++) {
@@ -91,8 +94,8 @@ contract MTP {
     //events
     //tokenAdded
     event TokenAdded(
-        address indexed _tokenContract,
-        uint indexed _numberOfTokens
+        address indexed _tokenContract
+        //uint indexed _numberOfTokens
         //string indexed _tokenName
         //fungible or nft
         //symbol
@@ -100,18 +103,24 @@ contract MTP {
     );
 
 
-    function addToken(address contractAddress) public returns (uint numTokens){
-        numTokens++;
-        tokens[contractAddress] = Token(
-            {
-                token_Address_: contractAddress,
-                total_Staked_Tokens_: 0,
-                number_Token_Stakers_: 0,
-                token_Stake_Balance_: 0,
-                token_Stakers_: 
-            }
-        );
-        emit TokenAdded(contractAddress, numTokens);
+    function addToken(address contractAddress, address tokenRecipient) public {
+        //numTokens++;
+        Token storage t_ = tokens[contractAddress];
+        t_.token_Address_ = contractAddress;
+        t_.total_Staked_Tokens_ = 0;
+        t_.number_Token_Stakers_ = 0;
+        t_.token_Stake_Balance_ = 0;
+        t_.token_Stakers_.push(stakers[tokenRecipient]); //tokenRecipient should already be initialized as Staker
+        // tokens[contractAddress] = Token(
+        //     {
+        //         token_Address_: contractAddress,
+        //         total_Staked_Tokens_: 0,
+        //         number_Token_Stakers_: 0,
+        //         token_Stake_Balance_: 0,
+        //         token_Stakers_: [Staker(contractAddress, 0)]
+        //     }
+        // );
+        emit TokenAdded(contractAddress);
     }
 
     event StakerAdded(
