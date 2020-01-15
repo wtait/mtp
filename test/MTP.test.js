@@ -60,8 +60,6 @@ describe('MTP', () => {
         });
         it('should add a Token struct to tokens mapping when a new token is staked', async function() {
             this.value = new BN(1);
-            //const numberToken = await this.mtp.numTokens;
-            //console.log(numberToken);
             await this.token.approve(this.mtpAddress, this.value,{from: alice});
             await this.mtp.mtpTransfer(this.tokenAddress, bob, this.value, {from: alice});
             const newTokenStruct = await this.mtp.tokens.call(this.tokenAddress);
@@ -69,6 +67,21 @@ describe('MTP', () => {
             newTokenStruct.should.own.include({token_Address_: this.tokenAddress});
             stakerCount.should.equal(1);
         });
+        it('should add a Staker struct to stakers mapping when a new staker receives a token', async function() {
+            this.value = new BN(1);
+            await this.token.approve(this.mtpAddress, this.value,{from: alice});
+            await this.mtp.mtpTransfer(this.tokenAddress, bob, this.value, {from: alice});
+            const newStakerFromStruct = await this.mtp.stakers.call(alice);
+            const stakerFromBalance = await newStakerFromStruct.staker_Stake_Balance_.toNumber();
+            console.log(newStakerFromStruct);
+            const newStakerToStruct = await this.mtp.stakers.call(bob);
+            const stakerToBalance = await newStakerToStruct.staker_Stake_Balance_.toNumber();
+            console.log(newStakerToStruct);
+            newStakerFromStruct.should.own.include({staker_Address_: alice});
+            stakerFromBalance.should.equal(0);
+            newStakerToStruct.should.own.include({staker_Address_: bob});
+            stakerToBalance.should.equal(0);        
+        })
     });
 
 })
