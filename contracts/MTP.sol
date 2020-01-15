@@ -67,7 +67,7 @@ contract MTP {
         //s.staker_Address_ = to_;
 
         if(tokens[token_].token_Address_ != token_) {
-            addToken(token_, to_);
+            addToken(token_, from_, to_);
         }
 
 
@@ -107,14 +107,15 @@ contract MTP {
     );
 
 
-    function addToken(address contractAddress, address tokenRecipient) public {
+    function addToken(address contractAddress, address tokenSender, address tokenRecipient) public {
         //numTokens++;
         Token storage t_ = tokens[contractAddress];
         t_.token_Address_ = contractAddress;
         t_.total_Staked_Tokens_ = 0;
         t_.number_Token_Stakers_ = 0;
         t_.token_Stake_Balance_ = 0;
-        t_.token_Stakers_.push(stakers[tokenRecipient]); //tokenRecipient should already be initialized as Staker
+        t_.token_Stakers_.push(stakers[tokenSender]); //tokenRecipient should already be initialized as Staker
+        t_.token_Stakers_.push(stakers[tokenRecipient]);
         // tokens[contractAddress] = Token(
         //     {
         //         token_Address_: contractAddress,
