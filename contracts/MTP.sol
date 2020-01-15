@@ -54,6 +54,10 @@ contract MTP {
     function mtpTransfer(address token_, address to_, uint256 amount_) public {
         address from_ = msg.sender;
 
+        if(stakers[from_].staker_Address_ != from_) {
+            addStaker(from_);
+        }
+
         if(stakers[to_].staker_Address_ != to_) {
             addStaker(to_);
         }
@@ -128,8 +132,7 @@ contract MTP {
         uint indexed numberOfStakers
     );
 
-    function addStaker(address stakerAddress_) public returns(uint numStakers){
-        numStakers++;
+    function addStaker(address stakerAddress_) public {
         stakers[stakerAddress_] = Staker(
             {
                 staker_Address_: stakerAddress_,
