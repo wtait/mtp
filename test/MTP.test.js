@@ -32,7 +32,7 @@ describe('MTP', () => {
         });
         it('distributes correct amount to accounts', async function() {
             let founderBalance = await this.token.balanceOf(alice);
-            founderBalance = founderBalance.toNumber()
+            founderBalance = founderBalance.toNumber();
             founderBalance.should.equal(initialSupply);
         });
         it('should be able to  transfer sender token to another wallet', async function() {
@@ -79,6 +79,31 @@ describe('MTP', () => {
             stakerFromBalance.should.equal(1);
             newStakerToStruct.should.own.include({staker_Address_: bob});
             stakerToBalance.should.equal(-1);        
+        });
+        it('should update staker balances upon new transfers', async function() {
+            var account;
+            this.mtp = await MTP.new();
+            this.token = await TutorialToken.new(initialSupply, {from: alice});
+            this.tokenAddress = await this.token.address;
+            this.mtpAddress = await this.mtp.address;
+            this.value = new BN(1);
+            var receiverIndex = 1;
+            
+            for ( account of accounts) {
+                console.log(accounts[receiverIndex]);
+                await this.token.approve(this.mtpAddress, this.value,{from: account});
+                await this.mtp.mtpTransfer(this.tokenAddress, accounts[receiverIndex], this.value, {from: account});
+                receiverIndex ++;
+            }
+            //accounts.forEach(async function(account, index) {
+                //this.mtp = await MTP.new();
+                //this.token = await TutorialToken.new(initialSupply, {from: alice})
+                //this.value = new BN(1);
+                //console.log(this.token);
+                //console.log(index + " - " + account)
+                //await this.token.approve(this.mtpAddress, this.value,{from: account});
+                //await this.mtp.mtpTransfer(this.tokenAddress, accounts[index + 1], this.value, {from: account});
+            //});
         })
     });
 
