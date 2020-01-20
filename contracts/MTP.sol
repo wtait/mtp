@@ -46,25 +46,23 @@ contract MTP {
   //   owner = msg.sender;
   // }
 
-/**
- * @dev method that handles transfer of ERC20 tokens to other address
- * it assumes the calling address has approved this contract * as spender
- * @param token_ token contract address
- * @param to_ beneficiary address
 
- * @param amount_ numbers of token to transfer */
+    function nfMTPTransfer(address tokenContract_, address to_, uint256 tokenId_) public {
+        address from_ = msg.sender;
 
-    // function nftMTPTransfer(address tokenContract_, address to_, uint256 tokenID_) public {
-    //     address from_ = msg.sender;
+        if(stakers[from_].staker_Address_ != from_) {
+            addStaker(from_);
+        }
 
-    //     if(stakers[from_].staker_Address_ != from_) {
-    //         addStaker(from_);
-    //     }
+        if(stakers[to_].staker_Address_ != to_) {
+            addStaker(to_);
+        }
 
-    //     if(stakers[to_].staker_Address_ != to_) {
-    //         addStaker(to_);
-    //     }
-    // }
+
+        ERC721Interface = IERC721(tokenId_);
+
+        ERC721Interface.transferFrom(from_, to_, tokenId_);
+    }
 
     function mtpTransfer(address token_, address to_, uint256 amount_) public {
         address from_ = msg.sender;
