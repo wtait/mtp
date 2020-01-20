@@ -65,7 +65,7 @@ describe('MTP', () => {
             const newTokenStruct = await this.mtp.tokens.call(this.tokenAddress);
             const stakerCount = await newTokenStruct.number_Token_Stakers_.toNumber();
             newTokenStruct.should.own.include({token_Address_: this.tokenAddress});
-            stakerCount.should.equal(1);
+            stakerCount.should.equal(2);
         });
         it('should add a Staker struct to stakers mapping when a new staker receives a token', async function() {
             this.value = new BN(1);
@@ -88,13 +88,48 @@ describe('MTP', () => {
             this.mtpAddress = await this.mtp.address;
             this.value = new BN(1);
             var receiverIndex = 1;
-            
-            for ( account of accounts) {
-                console.log(accounts[receiverIndex]);
-                await this.token.approve(this.mtpAddress, this.value,{from: account});
-                await this.mtp.mtpTransfer(this.tokenAddress, accounts[receiverIndex], this.value, {from: account});
-                receiverIndex ++;
-            }
+            await this.token.approve(this.mtpAddress, this.value,{from: accounts[0]});
+            await this.mtp.mtpTransfer(this.tokenAddress, accounts[1], this.value, {from: accounts[0]});
+            var firstStaker = await this.mtp.stakers.call(accounts[1]);
+            var firstBalance = await firstStaker.staker_Stake_Balance_.toNumber();
+            console.log(firstBalance);
+            await this.token.approve(this.mtpAddress, this.value,{from: accounts[1]});
+            await this.mtp.mtpTransfer(this.tokenAddress, accounts[2], this.value, {from: accounts[1]});
+            firstStaker = await this.mtp.stakers.call(accounts[2]);
+            firstBalance = await firstStaker.staker_Stake_Balance_.toNumber();
+            console.log(firstBalance);
+            await this.token.approve(this.mtpAddress, this.value,{from: accounts[2]});
+            await this.mtp.mtpTransfer(this.tokenAddress, accounts[3], this.value, {from: accounts[2]});
+            firstStaker = await this.mtp.stakers.call(accounts[3]);
+            firstBalance = await firstStaker.staker_Stake_Balance_.toNumber();
+            console.log(firstBalance);
+            await this.token.approve(this.mtpAddress, this.value,{from: accounts[3]});
+            await this.mtp.mtpTransfer(this.tokenAddress, accounts[4], this.value, {from: accounts[3]});
+            firstStaker = await this.mtp.stakers.call(accounts[4]);
+            firstBalance = await firstStaker.staker_Stake_Balance_.toNumber();
+            console.log(firstBalance);
+            await this.token.approve(this.mtpAddress, this.value,{from: accounts[4]});
+            await this.mtp.mtpTransfer(this.tokenAddress, accounts[5], this.value, {from: accounts[4]});
+            firstStaker = await this.mtp.stakers.call(accounts[4]);
+            firstBalance = await firstStaker.staker_Stake_Balance_.toNumber();
+            console.log(firstBalance);
+            //const balances = [];
+            //const firstStaker = await this.mtp.stakers.call(accounts[0]);
+            //const firstBalance = await firstStaker.staker_Stake_Balance_.toNumber();
+            const tokenFirstU = await this.mtp.tokens.call(this.tokenAddress);
+            console.log(tokenFirstU);
+            console.log(accounts);
+            console.log(firstStaker);
+            //const stakerToBalance = await newStakerToStruct.staker_Stake_Balance_.toNumber()
+            // for ( account of accounts) {
+            //     console.log(account);
+            //     console.log(accounts[receiverIndex]);
+            //     let sender = account;
+            //     let receiver = await accounts[receiverIndex];
+            //     await this.token.approve(this.mtpAddress, this.value,{from: sender});
+            //     await this.mtp.mtpTransfer(this.tokenAddress, receiver, this.value, {from: sender});
+            //     receiverIndex ++;
+            // }
             //accounts.forEach(async function(account, index) {
                 //this.mtp = await MTP.new();
                 //this.token = await TutorialToken.new(initialSupply, {from: alice})

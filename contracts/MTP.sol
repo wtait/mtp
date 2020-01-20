@@ -1,6 +1,7 @@
 pragma solidity 0.5.12;
 
 import "../node_modules/openzeppelin-solidity/contracts/token/ERC20/ERC20.sol";
+import "../node_modules/openzeppelin-solidity/contracts/token/ERC721/IERC721.sol";
 
 
 contract MTP {
@@ -36,8 +37,10 @@ contract MTP {
 
     mapping(address => Token) public tokens;
     mapping(address => Staker) public stakers;
+    mapping(uint256 => Token) public nftokens;
 
     ERC20 public ERC20Interface;
+    IERC721 public ERC721Interface;
 
   // constructor() public {  //need to inherit Ownable if used
   //   owner = msg.sender;
@@ -50,6 +53,18 @@ contract MTP {
  * @param to_ beneficiary address
 
  * @param amount_ numbers of token to transfer */
+
+    // function nftMTPTransfer(address tokenContract_, address to_, uint256 tokenID_) public {
+    //     address from_ = msg.sender;
+
+    //     if(stakers[from_].staker_Address_ != from_) {
+    //         addStaker(from_);
+    //     }
+
+    //     if(stakers[to_].staker_Address_ != to_) {
+    //         addStaker(to_);
+    //     }
+    // }
 
     function mtpTransfer(address token_, address to_, uint256 amount_) public {
         address from_ = msg.sender;
@@ -64,20 +79,21 @@ contract MTP {
 
 
         //Staker storage s = stakers[to_];
-        //s.staker_Address_ = to_;
+        //s.staker_Address_ = to_; not push stakers when stakers already exist
 
         if(tokens[token_].token_Address_ != token_) {
             addToken(token_, from_, to_);
+        } else {
+            Token storage t = tokens[token_];
+            t.token_Stakers_.push(stakers[to_]);
+            t.number_Token_Stakers_ ++;
+            t.token_Stake_Balance_ += t.number_Token_Stakers_;  //stakes should be abstracted to external contract or global variable?
         }
 
 
         Token storage t = tokens[token_];
-        t.token_Address_ = token_;
-        t.total_Staked_Tokens_ += amount_;
-        t.number_Token_Stakers_ ++;
-        t.token_Stake_Balance_ += t.number_Token_Stakers_;  //stakes should be abstracted to external contract or global variable?
-        //t.token_Stakers_.push(to_);
-        //t.token_Stakers_.push(s);
+        t.total_Staked_Tokens_ += amount_;  //this does not equal the circulating supply since
+        //we do not actually index the total number of fungible tokens deposited. but rather #tokens * #transfers
 
         //update bibo balances
             for(uint i = 0; i < t.token_Stakers_.length; i++) {
@@ -112,8 +128,8 @@ contract MTP {
         Token storage t_ = tokens[contractAddress];
         t_.token_Address_ = contractAddress;
         t_.total_Staked_Tokens_ = 0;
-        t_.number_Token_Stakers_ = 0;
-        t_.token_Stake_Balance_ = 0;
+        t_.number_Token_Stakers_ = 2;
+        t_.token_Stake_Balance_ = 1;
         t_.token_Stakers_.push(stakers[tokenSender]); //tokenRecipient should already be initialized as Staker
         t_.token_Stakers_.push(stakers[tokenRecipient]);
         // tokens[contractAddress] = Token(
