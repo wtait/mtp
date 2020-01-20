@@ -15,7 +15,7 @@ describe('MTP', () => {
 
     const MTP = contract.fromArtifact('MTP');
     const TutorialToken = contract.fromArtifact('TutorialToken');
-    const ERC721Mock = contract.fromArtifact('ERC721Mock');
+    //const ERC721Mock = contract.fromArtifact('ERC721Mock');
     const initialSupply = 12000;
     const[alice, bob] = accounts;
 
