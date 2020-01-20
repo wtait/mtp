@@ -5,6 +5,7 @@ const {
     expectEvent,  // Assertions for emitted events
     expectRevert, // Assertions for transactions that should fail
   } = require('@openzeppelin/test-helpers');
+  const { ZERO_ADDRESS } = constants;
 
 require('chai')
     .use(require('chai-as-promised'))
@@ -22,8 +23,9 @@ describe('MTP', () => {
     beforeEach(async function() {
         this.mtp = await MTP.new();
         this.token = await TutorialToken.new(initialSupply, {from: alice});
-        this.nftoken = await tNFT.new("test NFT", "NFTY", { from: alice });
         this.tokenAddress = await this.token.address;
+        this.nftoken = await tNFT.new();
+        this.nfTokenAddress = await this.nftoken.address;
         this.mtpAddress = await this.mtp.address;
     });
 
@@ -141,18 +143,31 @@ describe('MTP', () => {
                 //await this.token.approve(this.mtpAddress, this.value,{from: account});
                 //await this.mtp.mtpTransfer(this.tokenAddress, accounts[index + 1], this.value, {from: account});
             //});
-        })
+        });
     });
 
     describe("NFT Transfers", function() {
+        const nftokenId = new BN('5042');
+        //const nft = await this.tNFT.mint(owner, nftokenId);
+        
+        // beforeEach(async function () {
+        //   const nft = await this.tNFT.mint(owner, nftokenId);
+        // });
+   
         it("should be able to transfer an nft from sender to receiver", async function() {
-            let fix = false;
-            fix.should.equal(true);
+            const nft = await this.nftoken.mintUniqueTokenTo(alice, nftokenId);
+            let owner = await this.nftoken.ownerOf(nftokenId);
+            owner.should.equal(alice);
+            //let tokenName = await this.nftoken.name();
+            //let tokenSymbol = await this.nftoken.symbol();
+            await this.mtp.nfMTPTransfer(this.nfTokenAddress, bob, nftokenId, {from: alice});
+            //let newOwner = await this.nftoken.ownerOf(nftokenId);
+            //newOwner.should.equal(bob);
         });
         it('should create token structs for nfts', async function() {
             let fix = false;
             fix.should.equal(true);
-        })
-    })
+        });
+    });
 
-})
+});

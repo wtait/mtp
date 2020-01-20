@@ -59,9 +59,9 @@ contract MTP {
         }
 
 
-        ERC721Interface = IERC721(tokenId_);
+        ERC721Interface = IERC721(tokenContract_);
 
-        ERC721Interface.transferFrom(from_, to_, tokenId_);
+        ERC721Interface.safeTransferFrom(from_, to_, tokenId_);
     }
 
     function mtpTransfer(address token_, address to_, uint256 amount_) public {
