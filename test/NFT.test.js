@@ -6,7 +6,7 @@
 // const { expect } = require('chai');
 
 // //const { shouldBehaveLikeERC721 } = require('./ERC721.behavior');
-// const ERC721Mock = contract.fromArtifact('GameItem');
+// const ERC721Mock = contract.fromArtifact('TestNFT');
 
 // describe('ERC721', function () {
 //   const [ creator, owner, other, ...otherAccounts ] = accounts;
@@ -15,17 +15,17 @@
 //     this.token = await ERC721Mock.new({ from: creator });
 //   });
 
-//   shouldBehaveLikeERC721(creator, creator, otherAccounts);
+//   // shouldBehaveLikeERC721(creator, creator, otherAccounts);
 
 //   describe('internal functions', function () {
 //     const tokenId = new BN('5042');
 
 //     describe('_mint(address, uint256)', function () {
-//       it('reverts with a null destination address', async function () {
-//         await expectRevert(
-//           this.token.mint(ZERO_ADDRESS, tokenId), 'ERC721: mint to the zero address'
-//         );
-//       });
+//       // it('reverts with a null destination address', async function () {
+//       //   await expectRevert(
+//       //     this.token.mint(ZERO_ADDRESS, tokenId), 'ERC721: mint to the zero address'
+//       //   );
+//       // });
 
 //       context('with minted token', async function () {
 //         beforeEach(async function () {

@@ -15,13 +15,14 @@ describe('MTP', () => {
 
     const MTP = contract.fromArtifact('MTP');
     const TutorialToken = contract.fromArtifact('TutorialToken');
-    //const ERC721Mock = contract.fromArtifact('ERC721Mock');
+    const tNFT = contract.fromArtifact('TestNFT');
     const initialSupply = 12000;
     const[alice, bob] = accounts;
 
     beforeEach(async function() {
         this.mtp = await MTP.new();
         this.token = await TutorialToken.new(initialSupply, {from: alice});
+        this.nftoken = await tNFT.new("test NFT", "NFTY", { from: alice });
         this.tokenAddress = await this.token.address;
         this.mtpAddress = await this.mtp.address;
     });
@@ -142,5 +143,16 @@ describe('MTP', () => {
             //});
         })
     });
+
+    describe("NFT Transfers", function() {
+        it("should be able to transfer an nft from sender to receiver", async function() {
+            let fix = false;
+            fix.should.equal(true);
+        });
+        it('should create token structs for nfts', async function() {
+            let fix = false;
+            fix.should.equal(true);
+        })
+    })
 
 })
