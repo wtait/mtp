@@ -60,7 +60,7 @@ contract MTP {
 
 
         ERC721Interface = IERC721(tokenContract_);
-        ERC721Interface.approve(from_, tokenId_);
+        //ERC721Interface.approve(from_, tokenId_);
         ERC721Interface.safeTransferFrom(from_, to_, tokenId_);
     }
 

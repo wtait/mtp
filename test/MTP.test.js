@@ -148,21 +148,15 @@ describe('MTP', () => {
 
     describe("NFT Transfers", function() {
         const nftokenId = new BN('5042');
-        //const nft = await this.tNFT.mint(owner, nftokenId);
-        
-        // beforeEach(async function () {
-        //   const nft = await this.tNFT.mint(owner, nftokenId);
-        // });
-   
+
         it("should be able to transfer an nft from sender to receiver", async function() {
             const nft = await this.nftoken.mintUniqueTokenTo(alice, nftokenId);
             let owner = await this.nftoken.ownerOf(nftokenId);
             owner.should.equal(alice);
-            //let tokenName = await this.nftoken.name();
-            //let tokenSymbol = await this.nftoken.symbol();
+            await this.nftoken.setApprovalForAll(this.mtpAddress, true, {from: alice});
             await this.mtp.nfMTPTransfer(this.nfTokenAddress, bob, nftokenId, {from: alice});
-            //let newOwner = await this.nftoken.ownerOf(nftokenId);
-            //newOwner.should.equal(bob);
+            let newOwner = await this.nftoken.ownerOf(nftokenId);
+            newOwner.should.equal(bob);
         });
         it('should create token structs for nfts', async function() {
             let fix = false;
