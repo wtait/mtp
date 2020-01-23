@@ -1,0 +1,91 @@
+#Draft 'The Graph' schema for indexing mtp contract data to be consumed in dapp
+
+
+type Transfer @entity {
+  id: ID!
+  # mapping to Token entity
+  token: Token!
+  # network address of minting contract
+  tokenFactory: TokenFactory!
+  # e.g. Gods Unchained, Crypto Kitties, War Riders, etc.
+  tokenContractName: String
+  # Token Id of the transferrable asset
+  _tokenId: String! # uint256
+  # Transaction sender address
+  _from: Bytes! # address
+  # Address of reveiving party of transaction
+  _to: String! # address toHex()
+  # Ethereum block number
+  block: BigInt! 
+  # Event timestamp
+  timestamp: BigInt!
+  # Ethereum transaction hash
+  transaction: Bytes!
+}
+
+# the issuing contract of the transferred token
+type TokenFactory @entity {
+  id: ID!
+  tokenName: String
+  tokens: [Token!]! @derivedFrom(field: "tokenFactory")
+  stakers: [Staker!]! @derivedFrom(field: "tokenFactories")
+  transfers: [Transfer!]! @derivedFrom(field: "tokenFactory")
+}
+
+# the token being transferred
+type Token @entity {
+    id: ID!
+    #network address of contract that minted this token
+    tokenFactory: TokenFactory!
+    #users that have sent or received this token
+    stakers: [Staker!]!
+    #transfers of this token between users
+    transfers: [Transfer!]! @derivedFrom(field: "token")
+}
+
+# any entity included in stakeChains for staking. sub-entities include users (external accounts) and corporations/conglomorates/ (issuing contract or organization)
+type Staker @entity {
+  id: ID!
+  # accountType: String!  #should be either internal or external. use struc to sort
+  transfers: [Transfer!]!
+  stakeChains: [StakeChain!]! @derived(field: "stakers")
+  stakes: [Stake!]! @derivedFrom(field: "staker")
+  balance: Int
+  tokenFactories: [TokenFactory!]
+  tokens: [Token!] @derivedFrom(field: "stakers")
+}
+
+# an entity that defines the current set of token stakers and their stakes
+type StakeChain @entity {
+  id: ID!
+  transfer: Transfer!
+  token: Token!
+  stakers: [String!]!
+  stakes: [Stake!]! @derivedFrom(field: "stakeChain")
+}
+
+# a scalar value derived from the position of the staker in the current stake chain
+type Stake @entity {
+  id: ID!
+  tokenFactory: TokenFactory!
+  token: Token!
+  staker: Staker!
+  transfer: Transfer!
+  stakeChain: StakeChain!
+  value: Int!
+}
+
+
+
+
+# type MTPNetwork @entity {
+#   id: ID!
+#tokenFactories: BigInt!
+#   tokens: BigInt!
+#   users: BigInt!
+#   transfers: BigInt!
+#   tokensCirculating: BigInt!
+#   tokensLocked: BigInt!
+    # stakeChains: BigInt!
+    # stakes: BigInt!
+# }
