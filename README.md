@@ -63,20 +63,18 @@ than non mtp enabled counterparts.
 
 roadmap:
 
-+Feeless transactions 
-mtp receivers are not required to have eth as transaction fees are defferred until item withdrawal
-at which time 
++Feeless transactions: 
+mtp receivers are not required to have eth as transaction fees are deferred until item withdrawal at which time 
 1) if item is fungible (i.e. erc20 tokens) fees can be paid for directly from withdrawn tokens
-2) if item is non-fungible or more tokens are required; withdrawing user is required to deposit
-more tokens for staking
-*note; transaction fee payment must occur 'ab extra' to mtp measurments as otherwise could result 
+2) if item is non-fungible or more tokens are required; withdrawing user is required to deposit more tokens for staking
+note; transaction fee payment must occur 'ab extra' to mtp measurements as otherwise could result 
 in a leak of staked tokens and loss of passivity.
 
-+instant transfers
++instant transfers:
 transactions are instant due to sidechain or other implementation
 
 
-+composition/decomposition
++composition/decomposition:
 transferable items can be composed into new multi-component objects and transferred as new synthetic items.
 
 
