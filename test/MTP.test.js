@@ -158,13 +158,17 @@ describe('MTP', () => {
             let newOwner = await this.nftoken.ownerOf(nftokenId);
             newOwner.should.equal(bob);
         });
-        it('should create token structs for nfts', async function() {
-            let fix = false;
-            fix.should.equal(true);
-        });
         it('should have a mapping called nftokens', async function() {
             const tokenMapping = await this.mtp.nftokens;
             tokenMapping.should.to.exist;
+        });
+        it('should add a Token struct to nftokens mapping when a new token is staked', async function() {
+            const nft = await this.nftoken.mintUniqueTokenTo(alice, nftokenId);
+            await this.nftoken.setApprovalForAll(this.mtpAddress, true, {from: alice});
+            await this.mtp.nfMTPTransfer(this.nfTokenAddress, bob, nftokenId, {from: alice});
+            const newTokenStruct = await this.mtp.nftokens.call(nftokenId);
+            const newTokenId = newTokenStruct.token_id_.toNumber();
+            newTokenId.should.equal(nftokenId.toNumber());
         });
     });
 
