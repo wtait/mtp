@@ -61,14 +61,19 @@ contract MTP {
 
         if(tokens[tokenContract_].token_id_ != tokenId_) {
             addToken(tokenContract_, from_, to_, tokenId_);
-        } else {
-            Token storage t = nftokens[tokenId_];
-            t.token_Stakers_.push(stakers[to_]);
-            t.number_Token_Stakers_ ++;
-            t.token_Stake_Balance_ += t.number_Token_Stakers_;  //stakes should be abstracted to external contract or global variable?
         }
+        // else {
+        //     Token storage t = nftokens[tokenId_];
+        //     t.token_Stakers_.push(stakers[to_]);
+        //     t.number_Token_Stakers_ ++;
+        //     t.token_Stake_Balance_ += t.number_Token_Stakers_;  //stakes should be abstracted to external contract or global variable?
+        // }
 
         Token storage t = nftokens[tokenId_];
+        t.token_Stakers_.push(stakers[to_]);
+        t.number_Token_Stakers_ ++;
+        t.token_Stake_Balance_ += t.number_Token_Stakers_;
+
         //update bibo balances
         for(uint i = 0; i < t.token_Stakers_.length; i++) {
             address currentStakerAddress = t.token_Stakers_[i].staker_Address_;

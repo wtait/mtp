@@ -176,6 +176,9 @@ describe('MTP', () => {
             for(i = 0; i < accounts.length - 1; i++) {
                 let sender = accounts[i];
                 let receiver = accounts[i + 1];
+                let tokenBeforeTransfer = await this.mtp.nftokens.call(this.nftokenId);
+                let numStakers = tokenBeforeTransfer.number_Token_Stakers_;
+                console.log(numStakers);
                 await this.nftokenContract.setApprovalForAll(this.mtpAddress, true, {from: sender});
                 await this.mtp.nfMTPTransfer(this.nfTokenAddress, receiver, this.nftokenId, {from: sender});
             }
