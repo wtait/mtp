@@ -49,6 +49,8 @@ contract MTP {
 
 
     function nfMTPTransfer(address tokenContract_, address to_, uint256 tokenId_) public {
+        require(_isMTPItem(tokenId_), "non fungible transfer: must deposit token to MTP first");
+        
         address from_ = msg.sender;
 
         if(stakers[from_].staker_Address_ != from_) {
@@ -228,7 +230,15 @@ contract MTP {
         );
     }
 
+
+    function _isMTPItem(uint256 tokenId) internal view returns (bool) {
+        uint256 existingId = nftokens[tokenId].token_id_;
+        return existingId == tokenId;
+    }
+
 }
+
+
 
 //events
   //stakerAdded
