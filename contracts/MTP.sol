@@ -59,7 +59,7 @@ contract MTP {
             addStaker(to_);
         }
 
-        if(tokens[tokenContract_].token_id_ != tokenId_) {
+        if(nftokens[tokenId_].token_id_ != tokenId_) {
             addToken(tokenContract_, from_, to_, tokenId_);
         }
         // else {
