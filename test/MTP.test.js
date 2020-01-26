@@ -149,6 +149,7 @@ describe('MTP', () => {
         this.nfTokenAddress = await this.nftokenContract.address;
         this.nftokenId = new BN('5042');
         this.nft = await this.nftokenContract.mintUniqueTokenTo(alice, this.nftokenId);
+        await this.mtp.depositNonFungibleToken(this.nfTokenAddress, alice, this.nftokenId);
     });
 
     describe("NFT Transfers", function() {
