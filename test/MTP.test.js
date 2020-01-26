@@ -162,6 +162,10 @@ describe('MTP', () => {
             let fix = false;
             fix.should.equal(true);
         });
+        it('should have a mapping called nftokens', async function() {
+            const tokenMapping = await this.mtp.nftokens;
+            tokenMapping.should.to.exist;
+        });
     });
 
 });
