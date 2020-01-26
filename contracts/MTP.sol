@@ -23,6 +23,7 @@ contract MTP {
 
     struct Token {
         address token_Address_;
+        uint256 token_id_; //for nft tokens
         uint total_Staked_Tokens_;  //update on new stake deposits/withdraws of fungible tokens in/out of mtp network
         uint number_Token_Stakers_;
         uint token_Stake_Balance_;
@@ -58,7 +59,15 @@ contract MTP {
             addStaker(to_);
         }
 
-
+        if(tokens[tokenContract_].token_id_ != tokenId_) {
+            addToken(tokenContract_, from_, to_, tokenId_);
+        } else {
+            Token storage t = nftokens[tokenId_];
+            t.token_Stakers_.push(stakers[to_]);
+            t.number_Token_Stakers_ ++;
+            t.token_Stake_Balance_ += t.number_Token_Stakers_;  //stakes should be abstracted to external contract or global variable?
+        }
+        //addToken
         ERC721Interface = IERC721(tokenContract_);
         //ERC721Interface.approve(from_, tokenId_);
         ERC721Interface.safeTransferFrom(from_, to_, tokenId_);
@@ -126,6 +135,27 @@ contract MTP {
         Token storage t_ = tokens[contractAddress];
         t_.token_Address_ = contractAddress;
         t_.total_Staked_Tokens_ = 0;
+        t_.number_Token_Stakers_ = 2;
+        t_.token_Stake_Balance_ = 1;
+        t_.token_Stakers_.push(stakers[tokenSender]); //tokenRecipient should already be initialized as Staker
+        t_.token_Stakers_.push(stakers[tokenRecipient]);
+        // tokens[contractAddress] = Token(
+        //     {
+        //         token_Address_: contractAddress,
+        //         total_Staked_Tokens_: 0,
+        //         number_Token_Stakers_: 0,
+        //         token_Stake_Balance_: 0,
+        //         token_Stakers_: [Staker(contractAddress, 0)]
+        //     }
+        // );
+        emit TokenAdded(contractAddress);
+    }
+
+    function addToken(address contractAddress, address tokenSender, address tokenRecipient, uint256 tokenId) public {
+        Token storage t_ = nftokens[tokenId];
+        t_.token_Address_ = contractAddress;
+        t_.token_id_ = tokenId;
+        //t_.total_Staked_Tokens_ = 0;
         t_.number_Token_Stakers_ = 2;
         t_.token_Stake_Balance_ = 1;
         t_.token_Stakers_.push(stakers[tokenSender]); //tokenRecipient should already be initialized as Staker
