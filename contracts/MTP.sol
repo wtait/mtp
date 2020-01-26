@@ -59,9 +59,9 @@ contract MTP {
             addStaker(to_);
         }
 
-        if(nftokens[tokenId_].token_id_ != tokenId_) {
-            addToken(tokenContract_, from_, to_, tokenId_);
-        }
+        // if(nftokens[tokenId_].token_id_ != tokenId_) {
+        //     addToken(tokenContract_, from_, to_, tokenId_);
+        // }
         // else {
         //     Token storage t = nftokens[tokenId_];
         //     t.token_Stakers_.push(stakers[to_]);
@@ -75,16 +75,16 @@ contract MTP {
         t.token_Stake_Balance_ += t.number_Token_Stakers_;
 
         //update bibo balances
-        for(uint i = 0; i < t.token_Stakers_.length; i++) {
-            address currentStakerAddress = t.token_Stakers_[i].staker_Address_;
-            uint stakersBefore = i;
-            uint stakersAfter = t.token_Stakers_.length - (i + 1);
-            int  stakerNewStakes = int256(stakersAfter) - int256(stakersBefore);
-            t.token_Stakers_[i].staker_Stake_Balance_ += stakerNewStakes;
-            stakers[currentStakerAddress].staker_Stake_Balance_ += stakerNewStakes;
-        }
+        // for(uint i = 0; i < t.token_Stakers_.length; i++) {
+        //     address currentStakerAddress = t.token_Stakers_[i].staker_Address_;
+        //     uint stakersBefore = i;
+        //     uint stakersAfter = t.token_Stakers_.length - (i + 1);
+        //     int  stakerNewStakes = int256(stakersAfter) - int256(stakersBefore);
+        //     t.token_Stakers_[i].staker_Stake_Balance_ += stakerNewStakes;
+        //     stakers[currentStakerAddress].staker_Stake_Balance_ += stakerNewStakes;
+        // }
+        updateBiboBalances(tokenId_);
 
-        //addToken
         ERC721Interface = IERC721(tokenContract_);
         //ERC721Interface.approve(from_, tokenId_);
         ERC721Interface.safeTransferFrom(from_, to_, tokenId_);
@@ -188,6 +188,30 @@ contract MTP {
         //     }
         // );
         emit TokenAdded(contractAddress);
+    }
+
+    function depositNonFungibleToken(address contractAddress, address tokenOwner, uint256 tokenId) public {
+        Token storage t_ = nftokens[tokenId];
+        t_.token_Address_ = contractAddress;
+        t_.token_id_ = tokenId;
+        t_.token_Stakers_.push(stakers[tokenOwner]); //tokenRecipient should already be initialized as Staker
+        t_.number_Token_Stakers_ = 1;
+        t_.token_Stake_Balance_ = 1;
+        //emit TokenAdded(contractAddress);
+    }
+
+
+    function updateBiboBalances(uint256 tokenId) private {
+        Token storage t_ = nftokens[tokenId];
+
+        for(uint i = 0; i < t_.token_Stakers_.length; i++) {
+            address currentStakerAddress = t_.token_Stakers_[i].staker_Address_;
+            uint stakersBefore = i;
+            uint stakersAfter = t_.token_Stakers_.length - (i + 1);
+            int  stakerNewStakes = int256(stakersAfter) - int256(stakersBefore);
+            t_.token_Stakers_[i].staker_Stake_Balance_ += stakerNewStakes;
+            stakers[currentStakerAddress].staker_Stake_Balance_ += stakerNewStakes;
+        }
     }
 
     event StakerAdded(
