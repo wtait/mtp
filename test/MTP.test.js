@@ -119,9 +119,9 @@ describe('MTP', () => {
             //const firstStaker = await this.mtp.stakers.call(accounts[0]);
             //const firstBalance = await firstStaker.staker_Stake_Balance_.toNumber();
             const tokenFirstU = await this.mtp.tokens.call(this.tokenAddress);
-            console.log(tokenFirstU);
-            console.log(accounts);
-            console.log(firstStaker);
+            //console.log(tokenFirstU);
+            //console.log(accounts);
+            //console.log(firstStaker);
             //const stakerToBalance = await newStakerToStruct.staker_Stake_Balance_.toNumber()
             // for ( account of accounts) {
             //     console.log(account);
@@ -171,6 +171,17 @@ describe('MTP', () => {
             const newTokenStruct = await this.mtp.nftokens.call(this.nftokenId);
             const newTokenId = newTokenStruct.token_id_.toNumber();
             newTokenId.should.equal(this.nftokenId.toNumber());
+        });
+        it('should update staker balances upon new transfers',async function() {
+            for(i = 0; i < accounts.length - 1; i++) {
+                let sender = accounts[i];
+                let receiver = accounts[i + 1];
+                await this.nftokenContract.setApprovalForAll(this.mtpAddress, true, {from: sender});
+                await this.mtp.nfMTPTransfer(this.nfTokenAddress, receiver, this.nftokenId, {from: sender});
+            }
+            firstStaker = await this.mtp.stakers.call(accounts[0]);
+            firstBalance = await firstStaker.staker_Stake_Balance_.toNumber();
+            console.log(firstBalance);
         });
     });
 

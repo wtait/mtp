@@ -67,11 +67,24 @@ contract MTP {
             t.number_Token_Stakers_ ++;
             t.token_Stake_Balance_ += t.number_Token_Stakers_;  //stakes should be abstracted to external contract or global variable?
         }
+
+        Token storage t = nftokens[tokenId_];
+        //update bibo balances
+        for(uint i = 0; i < t.token_Stakers_.length; i++) {
+            address currentStakerAddress = t.token_Stakers_[i].staker_Address_;
+            uint stakersBefore = i;
+            uint stakersAfter = t.token_Stakers_.length - (i + 1);
+            int  stakerNewStakes = int256(stakersAfter) - int256(stakersBefore);
+            t.token_Stakers_[i].staker_Stake_Balance_ += stakerNewStakes;
+            stakers[currentStakerAddress].staker_Stake_Balance_ += stakerNewStakes;
+        }
+
         //addToken
         ERC721Interface = IERC721(tokenContract_);
         //ERC721Interface.approve(from_, tokenId_);
         ERC721Interface.safeTransferFrom(from_, to_, tokenId_);
     }
+
 
     function mtpTransfer(address token_, address to_, uint256 amount_) public {
         address from_ = msg.sender;
