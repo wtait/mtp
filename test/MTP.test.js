@@ -195,7 +195,7 @@ describe('MTP', () => {
                 let tokenAccount = {"tokenID": null, "tokenBalance": tokenBiboBal};
                 tokenAccount.tokenID = this.nftokenId;
                 stakeChain.push(tokenAccount);
-                let n = i;
+                let n = 0;
                 while(n < numStakers) {
                     let currentStakerAddress = accounts[n];
                     let currentStakerAccount = await this.mtp.stakers.call(currentStakerAddress);
