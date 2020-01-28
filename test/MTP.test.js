@@ -174,19 +174,55 @@ describe('MTP', () => {
             newTokenId.should.equal(this.nftokenId.toNumber());
         });
         it('should update staker balances upon new transfers',async function() {
+            let stakeChains = [];
+            let tokenBeforeTransfer = await this.mtp.nftokens.call(this.nftokenId);
             for(i = 0; i < accounts.length - 1; i++) {
                 let sender = accounts[i];
                 let receiver = accounts[i + 1];
-                let tokenBeforeTransfer = await this.mtp.nftokens.call(this.nftokenId);
+                //let tokenBeforeTransfer = await this.mtp.nftokens.call(this.nftokenId);
                 let numStakers = tokenBeforeTransfer.number_Token_Stakers_.toNumber();
                 let tokenBiboBal = tokenBeforeTransfer.token_Stake_Balance_.toNumber();
-                console.log("number of stakers = " + numStakers + ", token Bibo balance = " + tokenBiboBal);
+                //let senderBalance = await this.mtp.stakers.call(sender);
+                //let receiverBalance = await this.mtp.stakers.call(receiver);
+                //console.log(senderBalance);
+                //console.log("number of stakers before transfer = " + numStakers + ", token Bibo balance = " + tokenBiboBal + " sender balance: " + senderBalance.staker_Stake_Balance_ + " receiver balance: " + receiverBalance.staker_Stake_Balance_);
                 await this.nftokenContract.setApprovalForAll(this.mtpAddress, true, {from: sender});
                 await this.mtp.nfMTPTransfer(this.nfTokenAddress, receiver, this.nftokenId, {from: sender});
+                let tokenAfterTransfer = await this.mtp.nftokens.call(this.nftokenId);
+                numStakers = tokenAfterTransfer.number_Token_Stakers_.toNumber();
+                tokenBiboBal = tokenAfterTransfer.token_Stake_Balance_.toNumber();
+                let stakeChain = [];
+                let tokenAccount = {"tokenID": null, "tokenBalance": tokenBiboBal};
+                tokenAccount.tokenID = this.nftokenId;
+                stakeChain.push(tokenAccount);
+                let n = i;
+                while(n < numStakers) {
+                    let currentStakerAddress = accounts[n];
+                    let currentStakerAccount = await this.mtp.stakers.call(currentStakerAddress);
+                    stakeChain.push({"stakerAddress": currentStakerAddress, "stakerBalance": currentStakerAccount.staker_Stake_Balance_.toNumber()});
+                    n++;
+                }
+                stakeChains.push(stakeChain);
+                //console.log("number of stakers after transfer = " + numStakers + ", token Bibo balance = " + tokenBiboBal);
             }
-            firstStaker = await this.mtp.stakers.call(accounts[0]);
-            firstBalance = await firstStaker.staker_Stake_Balance_.toNumber();
-            console.log(firstBalance);
+            console.log(stakeChains);
+            // let biboBalances = [];
+            // //let tokenState = await this.mtp.nftokens.call(this.nftokenId);
+            // //console.log(tokenState);
+            // for(i = 0; i < accounts.length; i++) {
+            //     let stakerAddress = accounts[i];
+            //     let staker = await this.mtp.stakers.call(stakerAddress);
+            //     let biboBalance = staker.staker_Stake_Balance_.toNumber();
+            //     biboBalances.push({"address": stakerAddress, 'biboBalance' : biboBalance });
+            // }
+            // console.log("final balances : ", biboBalances);
+            // let totalSupply = biboBalances.reduce(function(supply, stakerBalance) {
+            //     return supply + stakerBalance.biboBalance;
+            // }, 0);
+            // console.log(totalSupply);
+            // firstStaker = await this.mtp.stakers.call(accounts[0]);
+            // firstBalance = await firstStaker.staker_Stake_Balance_.toNumber();
+            // console.log(firstBalance);
         });
     });
 
