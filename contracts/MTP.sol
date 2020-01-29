@@ -50,12 +50,12 @@ contract MTP {
 
     function nfMTPTransfer(address tokenContract_, address to_, uint256 tokenId_) public {
         require(_isMTPItem(tokenId_), "non fungible transfer: must deposit token to MTP first");
-        
+
         address from_ = msg.sender;
 
-        if(stakers[from_].staker_Address_ != from_) {
-            addStaker(from_);
-        }
+        // if(stakers[from_].staker_Address_ != from_) {
+        //     addStaker(from_);
+        // }
 
         if(stakers[to_].staker_Address_ != to_) {
             addStaker(to_);
@@ -197,7 +197,7 @@ contract MTP {
         t_.token_Address_ = contractAddress;
         t_.token_id_ = tokenId;
         t_.token_Stakers_.push(stakers[tokenOwner]); //tokenRecipient should already be initialized as Staker
-        t_.number_Token_Stakers_ = 1;
+        t_.number_Token_Stakers_ = 2; //setting to 2 includes token address as root staker account and depositor/owner as second staker account
         t_.token_Stake_Balance_ = 1;
         //emit TokenAdded(contractAddress);
     }
