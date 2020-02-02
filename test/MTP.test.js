@@ -176,12 +176,13 @@ describe('MTP', () => {
         it('should update staker balances upon new transfers',async function() {
             let stakeChains = [];
             let tokenBeforeTransfer = await this.mtp.nftokens.call(this.nftokenId);
+            stakeChains.push([tokenBeforeTransfer.token_Stakers_]);
             for(i = 0; i < accounts.length - 1; i++) {
                 let sender = accounts[i];
                 let receiver = accounts[i + 1];
                 //let tokenBeforeTransfer = await this.mtp.nftokens.call(this.nftokenId);
-                let numStakers = tokenBeforeTransfer.number_Token_Stakers_.toNumber();
-                let tokenBiboBal = tokenBeforeTransfer.token_Stake_Balance_.toNumber();
+                //let numStakers = tokenBeforeTransfer.number_Token_Stakers_.toNumber();
+                //let tokenBiboBal = tokenBeforeTransfer.token_Stake_Balance_.toNumber();
                 //let senderBalance = await this.mtp.stakers.call(sender);
                 //let receiverBalance = await this.mtp.stakers.call(receiver);
                 //console.log(senderBalance);
@@ -189,15 +190,19 @@ describe('MTP', () => {
                 await this.nftokenContract.setApprovalForAll(this.mtpAddress, true, {from: sender});
                 await this.mtp.nfMTPTransfer(this.nfTokenAddress, receiver, this.nftokenId, {from: sender});
                 let tokenAfterTransfer = await this.mtp.nftokens.call(this.nftokenId);
-                numStakers = tokenAfterTransfer.number_Token_Stakers_.toNumber();
-                tokenBiboBal = tokenAfterTransfer.token_Stake_Balance_.toNumber();
+                //let tokenStakers = tokenAfterTransfer;
+                console.log(tokenAfterTransfer);
+                let numStakers = tokenAfterTransfer.number_Token_Stakers_.toNumber();
+                //tokenBiboBal = tokenAfterTransfer.token_Stake_Balance_.toNumber();
                 let stakeChain = [];
-                let tokenAccount = {"tokenID": null, "tokenBalance": tokenBiboBal};
-                tokenAccount.tokenID = this.nftokenId;
-                stakeChain.push(tokenAccount);
+                //let tokenAccount = {"tokenID": null, "tokenBalance": tokenBiboBal};
+                //tokenAccount.tokenID = this.nftokenId;
+                //stakeChain.push(tokenAccount);
                 let n = 0;
                 while(n < numStakers) {
-                    let currentStakerAddress = accounts[n];
+                    console.log("numStakers: " + numStakers + " account number: " + n);
+                    let currentStakerAddress = tokenAfterTransfer.token_Stakers_[n].staker_Address_;
+                    console.log("current staker address: " + currentStakerAddress);
                     let currentStakerAccount = await this.mtp.stakers.call(currentStakerAddress);
                     stakeChain.push({"stakerAddress": currentStakerAddress, "stakerBalance": currentStakerAccount.staker_Stake_Balance_.toNumber()});
                     n++;

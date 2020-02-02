@@ -21,6 +21,12 @@ contract MTP {
     //   bool failed_;
     //  }
 
+    struct Staker { //change to TokenStaker
+        address staker_Address_;
+        //  uint stakerIndex_;
+        int staker_Stake_Balance_; //must support negative integers
+    }
+
     struct Token {
         address token_Address_;
         uint256 token_id_; //for nft tokens
@@ -30,11 +36,6 @@ contract MTP {
         Staker[] token_Stakers_; //mapping doesnt support multiple instances of same staker in the stakechain
     }
 
-    struct Staker { //change to TokenStaker
-        address staker_Address_;
-        //  uint stakerIndex_;
-        int staker_Stake_Balance_; //must support negative integers
-    }
 
     mapping(address => Token) public tokens;
     mapping(address => Staker) public stakers;
@@ -193,10 +194,19 @@ contract MTP {
     }
 
     function depositNonFungibleToken(address contractAddress, address tokenOwner, uint256 tokenId) public {
+        if(stakers[tokenOwner].staker_Address_ != tokenOwner) {
+            addStaker(tokenOwner);
+        }
+        if(stakers[contractAddress].staker_Address_ != contractAddress) {
+            addStaker(contractAddress);
+        }
         Token storage t_ = nftokens[tokenId];
         t_.token_Address_ = contractAddress;
         t_.token_id_ = tokenId;
-        t_.token_Stakers_.push(stakers[tokenOwner]); //tokenRecipient should already be initialized as Staker
+        Staker storage owner_ = stakers[tokenOwner];
+        Staker storage tokenContract_ = stakers[contractAddress];
+        t_.token_Stakers_.push(tokenContract_);
+        t_.token_Stakers_.push(owner_); //tokenRecipient should already be initialized as Staker
         t_.number_Token_Stakers_ = 2; //setting to 2 includes token address as root staker account and depositor/owner as second staker account
         t_.token_Stake_Balance_ = 1;
         //emit TokenAdded(contractAddress);
@@ -206,7 +216,7 @@ contract MTP {
     function updateBiboBalances(uint256 tokenId) private {
         Token storage t_ = nftokens[tokenId];
 
-        for(uint i = 0; i < t_.token_Stakers_.length; i++) {
+        for(uint i = 0; i < t_.token_Stakers_.length; i++) {  // i initialized to 1 to skip over token address which is included in
             address currentStakerAddress = t_.token_Stakers_[i].staker_Address_;
             uint stakersBefore = i;
             uint stakersAfter = t_.token_Stakers_.length - (i + 1);
