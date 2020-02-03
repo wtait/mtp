@@ -197,7 +197,7 @@ describe('MTP', () => {
                 //stakeChain.push(tokenAccou
                 let n = 0;
                 while(n < numStakers) {
-                    let currentStakerAddress = await this.mtp.tokenStakers.call(this.nftokenId, n);
+                    let currentStakerAddress = await this.mtp.stakeChains.call(this.nftokenId, n);
                     stakeChain.push(currentStakerAddress);
                     console.log("current staker address: " + currentStakerAddress + " at index: " + n);
                     n++;

@@ -43,7 +43,7 @@ contract MTP {
     mapping(address => Staker) public stakers;
     mapping(uint256 => Token) public nftokens;//maps token id to token struct
     mapping(address => int256) public balances; //bibo balances. can be positive or negative;
-    mapping(uint256 => address[]) public tokenStakers;  //maps a token id to an array of staker addresses
+    mapping(uint256 => address[]) public stakeChains;  //maps a token id to an array of staker addresses
 
     ERC20 public ERC20Interface;
     IERC721 public ERC721Interface;
@@ -67,8 +67,8 @@ contract MTP {
         //t.staker_Index_[t.number_Token_Stakers_] = to_;
         //t.number_Token_Stakers_ ++;
 
-        tokenStakers[tokenId_].push(to_);
-        t.token_Stake_Balance_ += tokenStakers[tokenId_].length;
+        stakeChains[tokenId_].push(to_);
+        t.token_Stake_Balance_ += stakeChains[tokenId_].length;
         updateBiboBalances(tokenId_);
 
         ERC721Interface = IERC721(tokenContract_);
@@ -195,20 +195,20 @@ contract MTP {
         //t_.staker_Index_[1] = tokenOwner;
         //t_.number_Token_Stakers_ = 2; //setting to 2 includes token address as root staker account and depositor/owner as second staker account
         t_.token_Stake_Balance_ = 1;
-        tokenStakers[tokenId].push(contractAddress);
-        tokenStakers[tokenId].push(tokenOwner);
+        stakeChains[tokenId].push(contractAddress);
+        stakeChains[tokenId].push(tokenOwner);
         //emit TokenAdded(contractAddress);
     }
 
 
     function updateBiboBalances(uint256 tokenId) private {
         //Token storage t_ = nftokens[tokenId];
-        address[] memory stakeChain = tokenStakers[tokenId];
+        address[] memory tokenStakeChain = stakeChains[tokenId];
 
-        for(uint i = 0; i < stakeChain.length; i++) {  // i initialized to 1 to skip over token address which is included in
-            address currentStakerAddress = stakeChain[i];
+        for(uint i = 0; i < tokenStakeChain.length; i++) {  // i initialized to 1 to skip over token address which is included in
+            address currentStakerAddress = tokenStakeChain[i];
             uint stakersBefore = i;
-            uint stakersAfter = stakeChain.length - (i + 1);
+            uint stakersAfter = tokenStakeChain.length - (i + 1);
             int  stakerNewStakes = int256(stakersAfter) - int256(stakersBefore);
            // t_.token_Stakers_[currentStakerAddress].staker_Stake_Balance_ += stakerNewStakes;
             balances[currentStakerAddress] += stakerNewStakes;
@@ -238,7 +238,7 @@ contract MTP {
     }
 
     function getStakeChainLength(uint256 tokenId) public returns (uint) {
-        return tokenStakers[tokenId].length;
+        return stakeChains[tokenId].length;
     }
 
 }

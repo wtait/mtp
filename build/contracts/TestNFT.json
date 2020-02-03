@@ -642,7 +642,7 @@
                         "name": "super",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 2983,
+                        "referencedDeclaration": 2989,
                         "src": "716:5:2",
                         "typeDescriptions": {
                           "typeIdentifier": "t_super$_TestNFT_$402",
@@ -1020,7 +1020,7 @@
                         "name": "super",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 2983,
+                        "referencedDeclaration": 2989,
                         "src": "716:5:2",
                         "typeDescriptions": {
                           "typeIdentifier": "t_super$_TestNFT_$402",
@@ -1153,7 +1153,7 @@
   },
   "networks": {},
   "schemaVersion": "3.0.20",
-  "updatedAt": "2020-02-03T21:19:21.516Z",
+  "updatedAt": "2020-02-03T21:55:02.661Z",
   "devdoc": {
     "methods": {
       "approve(address,uint256)": {
