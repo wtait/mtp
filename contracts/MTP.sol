@@ -30,19 +30,20 @@ contract MTP {
     struct Token {
         address token_Address_; //this is redundant
         uint256 token_id_; //for nft tokens
-        uint total_Staked_Tokens_;  //update on new stake deposits/withdraws of fungible tokens in/out of mtp network
-        uint number_Token_Stakers_;
+        //uint total_Staked_Tokens_;  //update on new stake deposits/withdraws of fungible tokens in/out of mtp network
+        //uint number_Token_Stakers_;
         uint token_Stake_Balance_;
         //Staker[] token_Stakers_; //mapping doesnt support multiple instances of same staker in the stakechain
-        mapping(address => Staker[]) token_Stakers_;
-        mapping(uint256 => address) staker_Index_;
+        //mapping(address => Staker[]) token_Stakers_;
+        //mapping(uint256 => address) staker_Index_;
     }
 
 
     mapping(address => Token) public tokens;
     mapping(address => Staker) public stakers;
-    mapping(uint256 => Token) public nftokens;
-    mapping(address => int256) public balances;
+    mapping(uint256 => Token) public nftokens;//maps token id to token struct
+    mapping(address => int256) public balances; //bibo balances. can be positive or negative;
+    mapping(uint256 => address[]) public tokenStakers;  //maps a token id to an array of staker addresses
 
     ERC20 public ERC20Interface;
     IERC721 public ERC721Interface;
@@ -62,11 +63,12 @@ contract MTP {
         }
 
         Token storage t = nftokens[tokenId_];
-        t.token_Stakers_[to_].push(stakers[to_]);
-        t.staker_Index_[t.number_Token_Stakers_] = to_;
-        t.number_Token_Stakers_ ++;
-        t.token_Stake_Balance_ += t.number_Token_Stakers_;
+        //t.token_Stakers_[to_].push(stakers[to_]);
+        //t.staker_Index_[t.number_Token_Stakers_] = to_;
+        //t.number_Token_Stakers_ ++;
 
+        tokenStakers[tokenId_].push(to_);
+        t.token_Stake_Balance_ += tokenStakers[tokenId_].length;
         updateBiboBalances(tokenId_);
 
         ERC721Interface = IERC721(tokenContract_);
@@ -185,29 +187,32 @@ contract MTP {
         Token storage t_ = nftokens[tokenId];
         t_.token_Address_ = contractAddress;
         t_.token_id_ = tokenId;
-        Staker  memory owner_ = stakers[tokenOwner];
-        Staker memory tokenContract_ = stakers[contractAddress];
-        t_.token_Stakers_[contractAddress].push(tokenContract_);
-        t_.staker_Index_[0] = contractAddress;
-        t_.token_Stakers_[tokenOwner].push(owner_); //tokenRecipient should already be initialized as Staker
-        t_.staker_Index_[1] = tokenOwner;
-        t_.number_Token_Stakers_ = 2; //setting to 2 includes token address as root staker account and depositor/owner as second staker account
+        //Staker  memory owner_ = stakers[tokenOwner];
+        //Staker memory tokenContract_ = stakers[contractAddress];
+        //t_.token_Stakers_[contractAddress].push(tokenContract_);
+        //t_.staker_Index_[0] = contractAddress;
+        //t_.token_Stakers_[tokenOwner].push(owner_); //tokenRecipient should already be initialized as Staker
+        //t_.staker_Index_[1] = tokenOwner;
+        //t_.number_Token_Stakers_ = 2; //setting to 2 includes token address as root staker account and depositor/owner as second staker account
         t_.token_Stake_Balance_ = 1;
+        tokenStakers[tokenId].push(contractAddress);
+        tokenStakers[tokenId].push(tokenOwner);
         //emit TokenAdded(contractAddress);
     }
 
 
     function updateBiboBalances(uint256 tokenId) private {
-        Token storage t_ = nftokens[tokenId];
+        //Token storage t_ = nftokens[tokenId];
+        address[] memory stakeChain = tokenStakers[tokenId];
 
-        for(uint i = 0; i < t_.number_Token_Stakers_; i++) {  // i initialized to 1 to skip over token address which is included in
-            address currentStakerAddress = t_.staker_Index_[i];
+        for(uint i = 0; i < stakeChain.length; i++) {  // i initialized to 1 to skip over token address which is included in
+            address currentStakerAddress = stakeChain[i];
             uint stakersBefore = i;
-            uint stakersAfter = t_.number_Token_Stakers_ - (i + 1);
+            uint stakersAfter = stakeChain.length - (i + 1);
             int  stakerNewStakes = int256(stakersAfter) - int256(stakersBefore);
            // t_.token_Stakers_[currentStakerAddress].staker_Stake_Balance_ += stakerNewStakes;
             balances[currentStakerAddress] += stakerNewStakes;
-            stakers[currentStakerAddress].staker_Stake_Balance_ += stakerNewStakes;
+            //stakers[currentStakerAddress].staker_Stake_Balance_ += stakerNewStakes;
         }
     }
 
@@ -217,6 +222,7 @@ contract MTP {
     );
 
     function addStaker(address stakerAddress_) public {
+        balances[stakerAddress_] = 0;
         stakers[stakerAddress_] = Staker(
             {
                 staker_Address_: stakerAddress_,
@@ -229,6 +235,10 @@ contract MTP {
     function _isMTPItem(uint256 tokenId) internal view returns (bool) {
         uint256 existingId = nftokens[tokenId].token_id_;
         return existingId == tokenId;
+    }
+
+    function getStakeChainLength(uint256 tokenId) public returns (uint) {
+        return tokenStakers[tokenId].length;
     }
 
 }
