@@ -1,13 +1,12 @@
-#Draft 'The Graph' schema for indexing mtp contract data to be consumed in dapp
 
-
+    # initializing event: mtpTransfer()
 type Transfer @entity {
   id: ID!
   # mapping to Token entity
   token: Token!
   # network address of minting contract
   tokenFactory: TokenFactory!
-  # e.g. Gods Unchained, Crypto Kitties, War Riders, etc.
+  # e.g. Tether, Chainlink, Gods Unchained, Crypto Kitties, War Riders, etc.
   tokenContractName: String
   # Token Id of the transferrable asset
   _tokenId: String! # uint256
@@ -24,6 +23,7 @@ type Transfer @entity {
 }
 
 # the issuing contract of the transferred token
+    # initializing event: addToken()
 type TokenFactory @entity {
   id: ID!
   tokenName: String
@@ -33,6 +33,7 @@ type TokenFactory @entity {
 }
 
 # the token being transferred
+    # initializing event: addToken()
 type Token @entity {
     id: ID!
     #network address of contract that minted this token
@@ -44,6 +45,7 @@ type Token @entity {
 }
 
 # any entity included in stakeChains for staking. sub-entities include users (external accounts) and corporations/conglomorates/ (issuing contract or organization)
+    # initializing event: mtpTransfer()
 type Staker @entity {
   id: ID!
   # accountType: String!  #should be either internal or external. use struc to sort
@@ -56,6 +58,7 @@ type Staker @entity {
 }
 
 # an entity that defines the current set of token stakers and their stakes
+    # initializing event: mtpTransfer()
 type StakeChain @entity {
   id: ID!
   transfer: Transfer!
@@ -65,6 +68,7 @@ type StakeChain @entity {
 }
 
 # a scalar value derived from the position of the staker in the current stake chain
+    # initializing event: mtpTransfer()
 type Stake @entity {
   id: ID!
   tokenFactory: TokenFactory!
@@ -76,8 +80,6 @@ type Stake @entity {
 }
 
 
-
-
 # type MTPNetwork @entity {
 #   id: ID!
 #tokenFactories: BigInt!
@@ -86,6 +88,6 @@ type Stake @entity {
 #   transfers: BigInt!
 #   tokensCirculating: BigInt!
 #   tokensLocked: BigInt!
-    # stakeChains: BigInt!
-    # stakes: BigInt!
+# stakeChains: BigInt!
+# stakes: BigInt!
 # }
