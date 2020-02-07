@@ -50,7 +50,7 @@ describe('MTP', () => {
             const newTokenId = newTokenStruct.token_id_.toNumber();
             newTokenId.should.equal(this.nftokenId.toNumber());
         });
-        it('should update staker balances upon new transfers',async function() {
+        it('should keep bibo total supply at 0 after transfers',async function() {
             let stakeChains = [];
             for(i = 0; i < accounts.length - 1; i++) {
                 let sender = accounts[i];
@@ -70,18 +70,19 @@ describe('MTP', () => {
             }
 
             let lastChain = stakeChains[stakeChains.length - 1];
-            console.log("lastChain: " + lastChain);
+            
             for(i = 0; i < lastChain.length; i++) {
                 let address = lastChain[i];
                 let balance = await this.mtp.balances.call(address);
                 lastChain[i] = {"address": address, "balance": balance.toNumber()};
             }
-            console.log(lastChain);
+
             let biboTotalSupply = lastChain.reduce(function(total, account) {
                 total += account.balance;
                 return total;
             }, 0);
-            console.log(biboTotalSupply);
+
+            biboTotalSupply.should.equal(0);
         });
     });
 
