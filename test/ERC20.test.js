@@ -14,7 +14,7 @@ require('chai')
 
 
 describe('TutorialToken', () => {
-    const TutorialToken = contract.fromArtifact('TutorialToken');
+    const TutorialToken = contract.fromArtifact('TestERC20');
     const initialSupply = 12000;
     const[sender, receiver] = accounts;
 
