@@ -13,20 +13,20 @@ require('chai')
     .should();
 
 
-describe('TutorialToken', () => {
-    const TutorialToken = contract.fromArtifact('TestERC20');
+describe('TestERC20 token', () => {
+    const TestToken = contract.fromArtifact('TestERC20');
     const initialSupply = 12000;
     const[sender, receiver] = accounts;
 
     beforeEach(async function () {
-        this.token = await TutorialToken.new(initialSupply, {from: sender});
+        this.token = await TestToken.new(initialSupply, {from: sender});
         this.value = new BN(1);
     });
 
     describe('token attributes', function() {
         it('has correct name', async function() {
             const name = await this.token.name();
-            name.should.equal("TutorialToken");
+            name.should.equal("TestToken");
         });
         it('has correct symbol', async function() {
             const symbol = await this.token.symbol();
