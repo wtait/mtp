@@ -41,11 +41,27 @@ TODO: withdrawal and stake burning
 FAQs
 
 why measure transfers? 
-transacting is the most universal representation of value. With transfer backed value, measurement happens at the point 
-of valuation and units do not exist independently or a priori to measurement. Reciprocity is gauranteed by a transfer backed value measurement which necesitates the broad distribution of tokens amongst account holders. This increased distribution of valued assets in turn induces the creation of new value by insuring the high availability of needed resources.
+    types of transactions: 
+        1) atomic (direct exchange/barter)
+        2) mediated(money)
+        3) measured
+
+    defining a self-consistent measure precludes the requirement of measurement via 
+    comparison. 
+    transacting is the most universal representation of value. With transfer backed value,
+    measurement happens at the point of valuation and units do not exist independently or 
+    a priori to measurement. Reciprocity is guaranteed by a transfer backed value 
+    measurement which necessitates the broad distribution of tokens amongst account 
+    holders. This increased distribution of valued assets in turn increases the creation of
+    new synthetic assets which then become transferrable themselves.
 
 why passive/bibo?
-...
+    stability. price/measure stability increases liquidity by assuring consistent
+    value comparison. traditional money systems are inherently instable and require
+    careful management based on complex indicators to achieve stability. mtp is
+    fundamentally stable by design. stability is enforced via protocol 
+    rather than managed. scalars are mathematically defined and thus value measurments
+    can be calculated deterministically.
 
 
 

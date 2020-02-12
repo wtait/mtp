@@ -121,7 +121,10 @@ function withdrawMTPItem (uint256 tokenId) {
     //withdraw token from mtp contract
 }
 
+
+
 //events
   //stakerAdded
   //newMTPTransfer
   //newMTPNetworkDeployed
+  //newNFTDeposited
