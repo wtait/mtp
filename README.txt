@@ -33,7 +33,7 @@ BIBOs are not transferrable themselves and are not limited or made scarce by any
 
 TODO: fungible versus non-fungible transfers
 
-TODO: transfer pausing
+TODO: the stake queue and transfer pausing 
 
 TODO: withdrawal and stake burning
 
@@ -41,26 +41,32 @@ TODO: withdrawal and stake burning
 FAQs
 
 why measure transfers? 
-    types of transactions: 
-        1) atomic (direct exchange/barter)
-        2) mediated(money)
-        3) measured
+    economic transactions can be organized into three basic categories: 
+        1) atomic (direct exchange/barter): a two way transaction of like valued goods between two parties. One set of goods
+        is transferred from one party to another in exchange in return for a second set of goods.
+            pros: reciprocation is instant and values are assessed directly by the parties to the transaction.
+            cons: requires equivalence of value between both sets of transferring items. thus the number of possible economic interactions is limited by the number of possible pairs of equivalently valued goods.
+            requires settlement of physical goods.
+        2) mediated(money): a two way transaction of, on one side goods, and on the other currency. 
+            pros: allows for exchange of disparate values; can be implemented as either centralized or decentralized 
+            cons: instability. reciprocity enforced by collateralized assets. susceptible to monopolization. 
+        3) measured (token-less): one way transaction/transfer. one party transfers goods to another with no return goods required. all transactions are measured and reciprocity ensured systematically via protocol
+            pros: no counterparty inputs required. no artificial limits to the number of possible transactions.
+            cons: requires a ledger capable of indexing 
 
     defining a self-consistent measure precludes the requirement of measurement via 
-    comparison. 
-    transacting is the most universal representation of value. With transfer backed value,
+    comparison. transacting may be the most universal representation of value. With transfer backed value,
     measurement happens at the point of valuation and units do not exist independently or 
-    a priori to measurement. Reciprocity is guaranteed by a transfer backed value 
-    measurement which necessitates the broad distribution of tokens amongst account 
-    holders. This increased distribution of valued assets in turn increases the creation of
+    a priori to measurement. Reciprocity can be guaranteed by protocol requirements which necessitate the broad distribution of tokens amongst accounts.
+    This increased distribution of valued assets in turn increases the creation of
     new synthetic assets which then become transferrable themselves.
 
 why passive/bibo?
-    stability. price/measure stability increases liquidity by assuring consistent
+    stability. stability increases liquidity by assuring consistent
     value comparison. traditional money systems are inherently instable and require
     careful management based on complex indicators to achieve stability. mtp is
-    fundamentally stable by design. stability is enforced via protocol 
-    rather than managed. scalars are mathematically defined and thus value measurments
+    fundamentally stable by design. stability is insured via protocol 
+    rather than ab extra management. scalars are mathematically defined and thus value measurements
     can be calculated deterministically.
 
 
@@ -68,9 +74,10 @@ why passive/bibo?
 
 corollaries:
 
--alternative to scarcity dependant value systems; value is derived only from the broad distribution of transferrable items.
--mtp enabled assets are transferred at much higher rates and across a much greater set of accounts
-than non mtp enabled counterparts.
+-alternative to scarcity dependent value systems; value is derived only from the broad distribution of transferrable items.
+
+-as there are no artificial limits on transactions, mtp enabled assets are transferred at much higher rates and across a 
+much greater set of accounts than non mtp enabled counterparts.
 -highly efficient distribution and utilization of assets. Valuable tokens have little to no downtime in usage.
 -price independent measure of value and stable asset peg.
 
@@ -78,6 +85,9 @@ than non mtp enabled counterparts.
 
 
 roadmap:
+
++fungible transfers:
+protocol supports fungible token transfers
 
 +Feeless transactions: 
 mtp receivers are not required to have eth as transaction fees are deferred until item withdrawal at which time 
@@ -91,7 +101,7 @@ transactions are instant due to sidechain or other implementation
 
 
 +composition/decomposition:
-transferable items can be composed into new multi-component objects and transferred as new synthetic items.
+transferable items can be composed into multi-component objects and transferred as new synthetic items.
 
 
 +protocol is cross-chain compatible
